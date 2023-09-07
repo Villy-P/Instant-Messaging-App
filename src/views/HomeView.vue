@@ -19,7 +19,7 @@
 					<div class="pb-1 border-b-2 border-b-black font-thin">{{ i.message }}</div>
 				</div>
 			</div>
-			<div class="h-16 flex w-full">
+			<div class="h-16 flex w-full shrink-0">
 				<input type="text" class="px-2 grow" placeholder="Your Message" ref="input" @keydown.enter="sendMessage">
 				<div class="w-14 h-full flex items-center justify-center">
 					<div class="w-8 h-8 bg-cyan-400 rounded-lg flex items-center justify-center cursor-pointer" @click="sendMessage">
@@ -28,7 +28,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="w-56 border-l-2 border-l-black" v-if="showUsersMenu">
+		<div class="w-56 border-l-2 border-l-black shrink-0" v-if="showUsersMenu">
 			<div class="w-full text-center text-lg font-medium py-2">Users</div>
 			<div v-for="u in users" :key="u.id" class="py-1 text-center">
 				<div>{{ u.username }}</div>
