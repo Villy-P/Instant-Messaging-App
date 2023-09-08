@@ -28,7 +28,7 @@
 			</div>
 			<div class="h-16 flex w-full shrink-0">
 				<input type="text" class="px-2 grow" placeholder="Your Message" ref="input" @keydown.enter="sendMessage">
-				<div class="w-14 h-full flex items-center justify-center">
+				<div class="w-fit h-full flex items-center justify-center px-5">
 					<div class="w-8 h-8 bg-cyan-400 rounded-lg flex items-center justify-center cursor-pointer" @click="sendMessage">
 						<img src="../assets/enter.svg" class="w-4 h-4">
 					</div>
