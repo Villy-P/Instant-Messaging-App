@@ -5,7 +5,7 @@
         <div class="">How to Join:</div>
         <ul class="text-left list-item list-disc w-80">
             <li>Go to 
-                <a :href="`https://${IP_ADDRESS}:${SERVER_PORT}`" class="text-blue-500 hover:text-blue-600">
+                <a :href="`https://${IP_ADDRESS}:${SERVER_PORT}`" target="_blank" class="text-blue-500 hover:text-blue-600">
                     https://{{ IP_ADDRESS }}:{{ SERVER_PORT }}
                 </a>
             </li>
