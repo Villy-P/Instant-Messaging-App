@@ -7,8 +7,9 @@
 					<p>{{ APP_NAME }}</p>
 					<p class="text-xs">by {{ CREATOR_NAME }}</p>
 				</div>
-				<div class="float-right h-14 w-14 flex items-center justify-center cursor-pointer" title="Users">
+				<div class="float-right h-14 w-14 flex items-center justify-center cursor-pointer tooltip-container">
 					<img src="../assets/user.svg" class="w-10 h-10" @click="showUsersMenu = !showUsersMenu">
+					<div class="tooltip-text tooltip-bottom">Users</div>
 				</div>
 			</div>
 			<div class="border-b-2 border-b-black overflow-y-auto overflow-x-hidden grow" ref="messageBody">
@@ -33,11 +34,13 @@
 				<div class="flex h-16 w-full border-t-2" :class="currentFile ? 'border-t-gray-400' : ''">
 					<input type="text" class="px-2 grow" placeholder="Your Message" ref="input" @keydown.enter="sendMessage">
 					<div class="w-fit h-full flex items-center justify-center px-5 gap-3">
-						<div class="w-8 h-8 bg-cyan-400 rounded-lg flex items-center justify-center cursor-pointer" @click="sendMessage">
+						<div class="w-8 h-8 bg-cyan-400 rounded-lg flex items-center justify-center cursor-pointer tooltip-container" @click="sendMessage">
 							<img src="../assets/enter.svg" class="w-4 h-4">
+							<div class="tooltip-text tooltip-top">Send Message</div>
 						</div>
-						<div class="w-8 h-8  rounded-lg flex items-center justify-center cursor-pointer" @click="$refs.fileInput.click()">
+						<div class="w-8 h-8  rounded-lg flex items-center justify-center cursor-pointer tooltip-container" @click="$refs.fileInput.click()">
 							<img src="../assets/upload.svg" class="w-4 h-4">
+							<div class="tooltip-text tooltip-top">Upload Image</div>
 						</div>
 					</div>
 				</div>
@@ -46,7 +49,9 @@
 		<div class="w-56 border-l-2 border-l-black shrink-0" v-if="showUsersMenu">
 			<div class="w-full text-center text-lg font-medium py-2">Users</div>
 			<div v-for="u in users" :key="u.id" class="py-1 text-center flex justify-center items-center gap-2">
-				<div :class="u.status === 0 ? 'bg-green-500' : 'bg-red-500'" class="w-4 h-4 rounded-full"></div>
+				<div :class="u.status === 0 ? 'bg-green-500' : 'bg-red-500'" class="w-3 h-3 rounded-full tooltip-container">
+					<div class="tooltip-text tooltip-left">{{ u.status === 0 ? "Online" : "Offline" }}</div>
+				</div>
 				<div>{{ u.username }}</div>
 			</div>
 		</div>
@@ -177,3 +182,5 @@
 		}
 	}
 </script>
+
+<style lang="scss" src="../styles/tooltip.scss"></style>
