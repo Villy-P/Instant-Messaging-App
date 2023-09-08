@@ -181,14 +181,30 @@
 			const hour = today.getHours();
 			const minutes = today.getMinutes();
 
-			return `${dd}/${mm}/${yyyy} at ${hour}:${minutes}`;
+			return `${mm}/${dd}/${yyyy} at ${hour}:${minutes}`;
 		}
 
 		uploadImage(evt: Event) {
 			//@ts-ignore
-			const file = evt.target?.files[0];
+			const file: File = evt.target?.files[0];
 			this.currentFile = file;
-			this.currentFileURL = "";
+			const reader = new FileReader();
+			reader.onload = this.handleFileLoad;
+
+			reader.readAsText(file);
+		}
+
+		handleFileLoad(evt: ProgressEvent<FileReader>) {
+			this.currentFileURL = window.btoa(unescape(encodeURIComponent(evt.target!.result! as string)));
+		}
+
+		arrayBufferToBase64( buffer: ArrayBuffer ) {
+			let binary = '';
+			const bytes = new Uint8Array( buffer );
+			const len = bytes.byteLength;
+			for (let i = 0; i < len; i++)
+				binary += String.fromCharCode( bytes[ i ] );
+			return window.btoa( binary );
 		}
 	}
 </script>
