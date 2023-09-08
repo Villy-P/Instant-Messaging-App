@@ -45,7 +45,8 @@
 		</div>
 		<div class="w-56 border-l-2 border-l-black shrink-0" v-if="showUsersMenu">
 			<div class="w-full text-center text-lg font-medium py-2">Users</div>
-			<div v-for="u in users" :key="u.id" class="py-1 text-center">
+			<div v-for="u in users" :key="u.id" class="py-1 text-center flex justify-center items-center gap-2">
+				<div :class="u.status === 0 ? 'bg-green-500' : 'bg-red-500'" class="w-4 h-4 rounded-full"></div>
 				<div>{{ u.username }}</div>
 			</div>
 		</div>

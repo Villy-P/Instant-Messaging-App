@@ -98,8 +98,10 @@ io.on('connection', (socket) => {
                 timestamp: Date.now(),
                 type: 1,
             })
-        } else
+        } else {
             user.id = socket.id;
+            user.status = USER_STATUS.CONNECTED;
+        }
         io.emit("joined", JSON.stringify({users: users, user: currentSocket, isNew: user == undefined}));
     });
 })
