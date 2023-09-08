@@ -1,4 +1,5 @@
 <template>
+	<input type="file" ref="fileInput" class="hidden" @change="uploadImage">
 	<div class="w-screen h-screen flex">
 		<div class="grow h-screen flex flex-col">
 			<div class="navbar w-full h-14 border-b-2 border-b-black z-10">
@@ -17,6 +18,7 @@
 							<div class="font-semibold">{{ i.sender }}</div>
 							<div class="text-xs text-gray-500">{{ getDate(i.timestamp) }}</div>
 						</div>
+						<img v-if="i.image" :src="i.image" class="w-1/4">
 						<div class="pb-1 border-b-2 border-b-black font-thin">{{ i.message }}</div>
 					</div>
 					<div v-else class="flex items-center">
@@ -26,11 +28,17 @@
 					</div>
 				</div>
 			</div>
-			<div class="h-16 flex w-full shrink-0">
-				<input type="text" class="px-2 grow" placeholder="Your Message" ref="input" @keydown.enter="sendMessage">
-				<div class="w-fit h-full flex items-center justify-center px-5">
-					<div class="w-8 h-8 bg-cyan-400 rounded-lg flex items-center justify-center cursor-pointer" @click="sendMessage">
-						<img src="../assets/enter.svg" class="w-4 h-4">
+			<div class="h-fit flex flex-col w-full shrink-0">
+				<img v-if="currentFile && currentFileURL" :src="currentFileURL" class="w-1/3 pl-5">
+				<div class="flex h-16 w-full border-t-2" :class="currentFile ? 'border-t-gray-400' : ''">
+					<input type="text" class="px-2 grow" placeholder="Your Message" ref="input" @keydown.enter="sendMessage">
+					<div class="w-fit h-full flex items-center justify-center px-5 gap-3">
+						<div class="w-8 h-8 bg-cyan-400 rounded-lg flex items-center justify-center cursor-pointer" @click="sendMessage">
+							<img src="../assets/enter.svg" class="w-4 h-4">
+						</div>
+						<div class="w-8 h-8  rounded-lg flex items-center justify-center cursor-pointer" @click="$refs.fileInput.click()">
+							<img src="../assets/upload.svg" class="w-4 h-4">
+						</div>
 					</div>
 				</div>
 			</div>
@@ -44,6 +52,7 @@
 	</div>
 </template>
 
+<!-- eslint-disable @typescript-eslint/ban-ts-comment -->
 <!-- eslint-disable @typescript-eslint/no-non-null-assertion -->
 <script lang="ts">
 	import { Vue } from 'vue-class-component';
@@ -63,6 +72,7 @@
 		message: string;
 		timestamp: number;
 		type: MESSAGE_TYPE;
+		image?: string;
 	}
 
 	interface User {
@@ -74,7 +84,8 @@
 	export default class HomeView extends Vue {
 		declare $refs: {
 			input: HTMLInputElement,
-			messageBody: HTMLDivElement
+			messageBody: HTMLDivElement,
+			fileInput: HTMLInputElement
 		}
 
 		showUsersMenu = true;
@@ -93,6 +104,9 @@
 
 		messages: Message[] = [];
 		users: User[] = [];
+
+		currentFile: File | null = null;
+		currentFileURL: string | null = null;
 
 		mounted(): void {
 			const username = localStorage.getItem("username");
@@ -126,15 +140,18 @@
 		}
 
 		sendMessage() {
-			if (!this.$refs.input.value.trim())
+			if (!this.$refs.input.value.trim() && !this.currentFile)
 				return;
 			this.socket.emit('sent', JSON.stringify({
 				sender: this.store.state.username,
 				message: this.$refs.input.value,
 				timestamp: Date.now(),
-				type: MESSAGE_TYPE.NORMAL
+				type: MESSAGE_TYPE.NORMAL,
+				image: this.currentFileURL
 			}));
 			this.$refs.input.value = "";
+			this.currentFile = null;
+			this.currentFileURL = null;
 		}
 
 		getDate(i: number) {
@@ -146,6 +163,13 @@
 			const minutes = today.getMinutes();
 
 			return `${dd}/${mm}/${yyyy} at ${hour}:${minutes}`;
+		}
+
+		uploadImage(evt: Event) {
+			//@ts-ignore
+			const file = evt.target?.files[0];
+			this.currentFile = file;
+			this.currentFileURL = URL.createObjectURL(file);
 		}
 	}
 </script>
