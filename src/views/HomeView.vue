@@ -1,4 +1,12 @@
 <template>
+	<div v-if="focusedImage" class="w-screen h-screen bg-opacity-90 bg-slate-900 absolute z-50 overflow-hidden">
+		<div class="w-full h-full flex items-center justify-center">
+			<img :src="focusedImage" class="max-w-full max-h-full m-auto overflow-auto fixed object-contain">
+		</div>
+		<div class="absolute w-5 h-5 top-6 right-6 cursor-pointer" @click="focusedImage = null">
+			<img src="../assets/x.svg">
+		</div>
+	</div>
 	<input type="file" ref="fileInput" class="hidden" @change="uploadImage">
 	<div class="w-screen h-screen flex overflow-hidden">
 		<div class="grow h-screen flex flex-col">
@@ -19,7 +27,7 @@
 							<div class="font-semibold">{{ i.sender }}</div>
 							<div class="text-xs text-gray-500">{{ getDate(i.timestamp) }}</div>
 						</div>
-						<img v-if="i.image" :src="i.image" class="w-1/4">
+						<img v-if="i.image" :src="i.image" class="w-1/4 cursor-pointer" @click="focusedImage = i.image">
 						<div class="pb-1 border-b-2 border-b-black font-thin break-all">{{ i.message }}</div>
 					</div>
 					<div v-else class="flex items-center">
@@ -113,6 +121,8 @@
 
 		currentFile: File | null = null;
 		currentFileURL: string | null = null;
+
+		focusedImage: string | null = null;
 
 		mounted(): void {
 			const username = localStorage.getItem("username");
