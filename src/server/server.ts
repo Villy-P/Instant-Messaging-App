@@ -88,7 +88,7 @@ io.on('connection', (socket) => {
             users.push(currentSocket);
         else
             user.id = socket.id;
-        io.emit("joined", JSON.stringify({users: users}));
+        io.emit("joined", JSON.stringify({users: users, user: currentSocket, isNew: user == undefined}));
     });
 })
 

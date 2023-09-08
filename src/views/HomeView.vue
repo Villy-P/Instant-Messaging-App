@@ -12,11 +12,18 @@
 			</div>
 			<div class="border-b-2 border-b-black overflow-y-auto overflow-x-hidden grow" ref="messageBody">
 				<div v-for="i in messages" class="flex flex-col m-2" :key="i.message">
-					<div class="flex items-center gap-2">
-						<div class="font-semibold">{{ i.sender }}</div>
-						<div class="text-xs text-gray-500">{{ getDate(i.timestamp) }}</div>
+					<div v-if="i.type == 0">
+						<div class="flex items-center gap-2">
+							<div class="font-semibold">{{ i.sender }}</div>
+							<div class="text-xs text-gray-500">{{ getDate(i.timestamp) }}</div>
+						</div>
+						<div class="pb-1 border-b-2 border-b-black font-thin">{{ i.message }}</div>
 					</div>
-					<div class="pb-1 border-b-2 border-b-black font-thin">{{ i.message }}</div>
+					<div v-else class="flex items-center">
+						<div class="grow bg-gray-500 h-0.5"></div>
+						<div class="text-sm px-3">{{ i.message }} on {{ getDate(i.timestamp) }}</div>
+						<div class=" grow bg-gray-500 h-0.5"></div>
+					</div>
 				</div>
 			</div>
 			<div class="h-16 flex w-full shrink-0">
@@ -46,10 +53,16 @@
 
 	import io from 'socket.io-client'
 
+	enum MESSAGE_TYPE {
+		NORMAL,
+		JOINED
+	}
+
 	interface Message {
 		sender: string;
 		message: string;
 		timestamp: number;
+		type: MESSAGE_TYPE;
 	}
 
 	interface User {
@@ -94,7 +107,15 @@
 				}, 100); 
 			});
 			this.socket.on('joined', (message: string) => {
-				this.users = JSON.parse(message).users;
+				const msg = JSON.parse(message);
+				this.users = msg.users;
+				if (msg.isNew)
+					this.messages.push({
+						message: `${msg.user.username} joined`,
+						sender: msg.user.username,
+						timestamp: Date.now(),
+						type: MESSAGE_TYPE.JOINED,
+					});
 			});
 			this.socket.on('disconnected', (message: string) => {
 				console.log(this.users)
@@ -110,7 +131,8 @@
 			this.socket.emit('sent', JSON.stringify({
 				sender: this.store.state.username,
 				message: this.$refs.input.value,
-				timestamp: Date.now()
+				timestamp: Date.now(),
+				type: MESSAGE_TYPE.NORMAL
 			}));
 			this.$refs.input.value = "";
 		}
