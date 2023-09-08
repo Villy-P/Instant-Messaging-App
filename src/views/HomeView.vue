@@ -188,7 +188,7 @@
 			//@ts-ignore
 			const file = evt.target?.files[0];
 			this.currentFile = file;
-			this.currentFileURL = URL.createObjectURL(file);
+			this.currentFileURL = "";
 		}
 	}
 </script>
