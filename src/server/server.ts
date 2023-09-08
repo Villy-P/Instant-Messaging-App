@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import express from "express";
 import http from 'https';
@@ -37,6 +38,7 @@ interface User {
 }
 
 const users: User[] = [];
+const messages: any[] = [];
 
 app.get("/", (req, res) => {
     res.send("Successfully verified server! Pick a username and join in!");
@@ -75,7 +77,11 @@ io.on('connection', (socket) => {
         io.emit("disconnected", JSON.stringify({users: users}));
     });
     socket.on('sent', (message) => {
+        messages.push(JSON.parse(message));
         io.emit("sent", message);
+    });
+    socket.on('getmessagehistory', () => {
+        socket.emit("getmessagehistory", JSON.stringify({msgs: messages}));
     });
     socket.on('joined', (message) => {
         const currentSocket: User = {
@@ -84,9 +90,15 @@ io.on('connection', (socket) => {
             status: USER_STATUS.CONNECTED
         };
         const user = getUserByName(message);
-        if (user == undefined)
+        if (user == undefined) {
             users.push(currentSocket);
-        else
+            messages.push({
+                message: `${currentSocket.username} joined`,
+                sender: currentSocket.username,
+                timestamp: Date.now(),
+                type: 1,
+            })
+        } else
             user.id = socket.id;
         io.emit("joined", JSON.stringify({users: users, user: currentSocket, isNew: user == undefined}));
     });

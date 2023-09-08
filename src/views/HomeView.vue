@@ -1,6 +1,6 @@
 <template>
 	<input type="file" ref="fileInput" class="hidden" @change="uploadImage">
-	<div class="w-screen h-screen flex">
+	<div class="w-screen h-screen flex overflow-hidden">
 		<div class="grow h-screen flex flex-col">
 			<div class="navbar w-full h-14 border-b-2 border-b-black z-10">
 				<div class="float-left h-14 w-fit flex  text-2xl pl-2 flex-col text-left">
@@ -19,7 +19,7 @@
 							<div class="text-xs text-gray-500">{{ getDate(i.timestamp) }}</div>
 						</div>
 						<img v-if="i.image" :src="i.image" class="w-1/4">
-						<div class="pb-1 border-b-2 border-b-black font-thin">{{ i.message }}</div>
+						<div class="pb-1 border-b-2 border-b-black font-thin break-all">{{ i.message }}</div>
 					</div>
 					<div v-else class="flex items-center">
 						<div class="grow bg-gray-500 h-0.5"></div>
@@ -28,7 +28,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="h-fit flex flex-col w-full shrink-0">
+			<div class="h-fit flex flex-col w-full shrink-1">
 				<img v-if="currentFile && currentFileURL" :src="currentFileURL" class="w-1/3 pl-5">
 				<div class="flex h-16 w-full border-t-2" :class="currentFile ? 'border-t-gray-400' : ''">
 					<input type="text" class="px-2 grow" placeholder="Your Message" ref="input" @keydown.enter="sendMessage">
@@ -132,11 +132,14 @@
 					});
 			});
 			this.socket.on('disconnected', (message: string) => {
-				console.log(this.users)
 				this.users = JSON.parse(message).users;
 			});
+			this.socket.on('getmessagehistory', (message: string) => {
+				this.messages = JSON.parse(message).msgs;
+			})
 
 			this.socket.emit('joined', username!);
+			this.socket.emit('getmessagehistory');
 		}
 
 		sendMessage() {
