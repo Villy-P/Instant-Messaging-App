@@ -38,7 +38,7 @@
 				</div>
 			</div>
 			<div class="h-fit flex flex-col w-full shrink-1">
-				<img v-if="currentFile && currentFileURL" :src="currentFileURL" class="w-1/3 pl-5">
+				<img v-if="currentFile && currentFileURL" :src="currentFileURL" class="w-1/3 pl-5 py-3">
 				<div class="flex h-16 w-full border-t-2" :class="currentFile ? 'border-t-gray-400' : ''">
 					<input type="text" class="px-2 grow" placeholder="Your Message" ref="input" @keydown.enter="sendMessage">
 					<div class="w-fit h-full flex items-center justify-center px-5 gap-3">
