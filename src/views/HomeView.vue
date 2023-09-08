@@ -191,11 +191,11 @@
 			const reader = new FileReader();
 			reader.onload = this.handleFileLoad;
 
-			reader.readAsText(file);
+			reader.readAsDataURL(file);
 		}
 
 		handleFileLoad(evt: ProgressEvent<FileReader>) {
-			this.currentFileURL = window.btoa(unescape(encodeURIComponent(evt.target!.result! as string)));
+			this.currentFileURL = evt.target!.result! as string;
 		}
 
 		arrayBufferToBase64( buffer: ArrayBuffer ) {
