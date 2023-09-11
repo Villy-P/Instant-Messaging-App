@@ -1,5 +1,7 @@
 # Instant-Messaging-App
 
+An instant messsaging app that you can run on a server. Good for school or work.
+
 ## Setup
 
 1. Create src/data/data.ts
@@ -23,3 +25,14 @@ export const VUE_PORT = "VueJS Port";
 
 8. Run `ts-node .\src\server\server.ts` on another terminal.
 9. Go to `https://YOUR_IP:VUE_PORT/`
+
+## Features
+
+* Check if people are online or not
+* Upload Images
+* Message Timestamps
+* See when people have joined
+* Save message state
+* Save the current User
+* View Image
+* Many more to come!
