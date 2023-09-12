@@ -215,9 +215,12 @@
 			if (!files)
 				return;
 			for (const file of files) {
-				if (file.type.indexOf('image') === -1)
+				if (file.type.indexOf('image') === -1) 
 					continue;
-				this.currentFileURL = URL.createObjectURL(file);
+				const reader = new FileReader();
+				reader.onload = this.handleFileLoad;
+
+				reader.readAsDataURL(file);
 			}
 		}
 		
