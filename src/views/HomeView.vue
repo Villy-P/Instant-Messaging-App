@@ -38,7 +38,7 @@
 				</div>
 			</div>
 			<div class="h-fit flex flex-col w-full shrink-1">
-				<img v-if="currentFileURL" :src="currentFileURL" class="w-1/3 pl-5 py-3">
+				<img v-if="currentFileURL" :src="currentFileURL" class="w-1/3 pl-5 py-3 h-fit overflow-auto object-cover" :style="`height: ${getImageContainerHeight()}px;`">
 				<div class="flex h-16 w-full border-t-2" :class="currentFileURL ? 'border-t-gray-400' : ''">
 					<input type="text" class="px-2 grow" placeholder="Your Message" ref="input" @keydown.enter="sendMessage" @input="checkImage" @paste="paste">
 					<div class="w-fit h-full flex items-center justify-center px-5 gap-3">
@@ -219,6 +219,10 @@
 					continue;
 				this.currentFileURL = URL.createObjectURL(file);
 			}
+		}
+		
+		getImageContainerHeight() {
+			return this.$refs.messageBody.clientHeight / 2;
 		}
 	}
 </script>
