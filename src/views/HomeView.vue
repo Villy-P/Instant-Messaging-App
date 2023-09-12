@@ -40,7 +40,7 @@
 			<div class="h-fit flex flex-col w-full shrink-1">
 				<img v-if="currentFileURL" :src="currentFileURL" class="w-1/3 pl-5 py-3">
 				<div class="flex h-16 w-full border-t-2" :class="currentFileURL ? 'border-t-gray-400' : ''">
-					<input type="text" class="px-2 grow" placeholder="Your Message" ref="input" @keydown.enter="sendMessage" @input="checkImage">
+					<input type="text" class="px-2 grow" placeholder="Your Message" ref="input" @keydown.enter="sendMessage" @input="checkImage" @paste="paste">
 					<div class="w-fit h-full flex items-center justify-center px-5 gap-3">
 						<div class="w-8 h-8 bg-cyan-400 rounded-lg flex items-center justify-center cursor-pointer tooltip-container" @click="sendMessage">
 							<img src="../assets/enter.svg" class="w-4 h-4">
@@ -208,6 +208,17 @@
 					(evt.target as HTMLInputElement).value = '';
 				}
 			}).catch(() => {});
+		}
+
+		paste(evt: ClipboardEvent) {
+			const files = evt.clipboardData?.files;
+			if (!files)
+				return;
+			for (const file of files) {
+				if (file.type.indexOf('image') === -1)
+					continue;
+				this.currentFileURL = URL.createObjectURL(file);
+			}
 		}
 	}
 </script>
