@@ -37,7 +37,7 @@ interface User {
     status: USER_STATUS
 }
 
-const users: User[] = [];
+let users: User[] = [];
 const messages: any[] = [];
 
 app.get("/", (req, res) => {
@@ -53,6 +53,11 @@ app.get("/usernameexists/:username", (req, res) => {
         }
     }
     res.send(false);
+});
+
+app.get("/delete/:username", (req) => {
+    const username = req.params.username;
+    users = users.filter(user => user.username != username);
 });
 
 function getUserById(id: string) {

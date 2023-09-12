@@ -1,4 +1,12 @@
 <template>
+    <div v-if="username" class="w-screen h-screen bg-opacity-90 bg-slate-900 absolute z-50 overflow-hidden flex items-center justify-center flex-container-centered">
+		<div class="w-96 h-fit p-2 m-2 bg-white rounded-xl text-center">
+            <h2 class="text-2xl">You're already registered</h2>
+            <p class="py-3">as {{ username }}</p>
+            <div class="bg-slate-100 w-fit m-auto p-2 rounded-2xl mb-3 cursor-pointer" @click="deleteAccount">Delete this account</div>
+            <div class="bg-cyan-300 w-fit m-auto p-2 rounded-2xl cursor-pointer" @click="$router.push('/chat')">Continue as {{ username }}</div>
+        </div>
+	</div>
 	<div class="w-screen h-screen flex items-center justify-center flex-col gap-3 flex-container-centered py-10">
         <div class="text-5xl text-center">{{ APP_NAME }}</div>
         <div class="text-xl py-3">by {{ CREATOR_NAME }}</div>
@@ -47,8 +55,20 @@
         APP_NAME = APP_NAME
 
         store = useStore(key);
+        username: null | string = null;
 
         badUsername = false;
+
+        mounted(): void {
+            this.username = localStorage.getItem('username');
+        }
+
+        async deleteAccount() {
+            localStorage.removeItem("username");
+            const username = this.username;
+            this.username = null;
+            await fetch(`https://${IP_ADDRESS}:${SERVER_PORT}/delete/${username}`);
+        }
 
         async moveTo() {
             const username = this.$refs.input.value.trim();
