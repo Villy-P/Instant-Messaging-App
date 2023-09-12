@@ -175,11 +175,11 @@
 
 		getDate(i: number) {
 			const today = new Date(i);
-			const dd = today.getDay();
-			const mm = today.getMonth() + 1;
-			const yyyy = today.getFullYear();
-			const hour = today.getHours();
-			const minutes = today.getMinutes();
+			const dd = today.getDate().toString().padStart(2, '0');
+			const mm = (today.getMonth() + 1).toString().padStart(2, '0');
+			const yyyy = today.getFullYear().toString().padStart(2, '0');
+			const hour = today.getHours().toString().padStart(2, '0');
+			const minutes = today.getMinutes().toString().padStart(2, '0');
 
 			return `${mm}/${dd}/${yyyy} at ${hour}:${minutes}`;
 		}
