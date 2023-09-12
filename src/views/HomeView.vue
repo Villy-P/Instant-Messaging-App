@@ -38,9 +38,9 @@
 				</div>
 			</div>
 			<div class="h-fit flex flex-col w-full shrink-1">
-				<img v-if="currentFile && currentFileURL" :src="currentFileURL" class="w-1/3 pl-5 py-3">
-				<div class="flex h-16 w-full border-t-2" :class="currentFile ? 'border-t-gray-400' : ''">
-					<input type="text" class="px-2 grow" placeholder="Your Message" ref="input" @keydown.enter="sendMessage">
+				<img v-if="currentFileURL" :src="currentFileURL" class="w-1/3 pl-5 py-3">
+				<div class="flex h-16 w-full border-t-2" :class="currentFileURL ? 'border-t-gray-400' : ''">
+					<input type="text" class="px-2 grow" placeholder="Your Message" ref="input" @keydown.enter="sendMessage" @input="checkImage">
 					<div class="w-fit h-full flex items-center justify-center px-5 gap-3">
 						<div class="w-8 h-8 bg-cyan-400 rounded-lg flex items-center justify-center cursor-pointer tooltip-container" @click="sendMessage">
 							<img src="../assets/enter.svg" class="w-4 h-4">
@@ -66,8 +66,10 @@
 	</div>
 </template>
 
+<!-- eslint-disable @typescript-eslint/no-empty-function -->
 <!-- eslint-disable @typescript-eslint/ban-ts-comment -->
 <!-- eslint-disable @typescript-eslint/no-non-null-assertion -->
+<!-- eslint-disable no-empty -->
 <script lang="ts">
 	import { Vue } from 'vue-class-component';
 	import { key } from '@/store/store';
@@ -119,7 +121,6 @@
 		messages: Message[] = [];
 		users: User[] = [];
 
-		currentFile: File | null = null;
 		currentFileURL: string | null = null;
 
 		focusedImage: string | null = null;
@@ -159,7 +160,7 @@
 		}
 
 		sendMessage() {
-			if (!this.$refs.input.value.trim() && !this.currentFile)
+			if (!this.$refs.input.value.trim() && !this.currentFileURL)
 				return;
 			this.socket.emit('sent', JSON.stringify({
 				sender: this.store.state.username,
@@ -169,7 +170,6 @@
 				image: this.currentFileURL
 			}));
 			this.$refs.input.value = "";
-			this.currentFile = null;
 			this.currentFileURL = null;
 		}
 
@@ -187,7 +187,6 @@
 		uploadImage(evt: Event) {
 			//@ts-ignore
 			const file: File = evt.target?.files[0];
-			this.currentFile = file;
 			const reader = new FileReader();
 			reader.onload = this.handleFileLoad;
 
@@ -196,6 +195,19 @@
 
 		handleFileLoad(evt: ProgressEvent<FileReader>) {
 			this.currentFileURL = evt.target!.result! as string;
+		}
+
+		async checkImage(evt: Event) {
+			const input = (evt.target as HTMLInputElement).value;
+			fetch(input).then(async (r) => {
+				if (!r.ok || r.status !== 200)
+					return;
+				const blob = await r.blob();
+				if (blob.type.startsWith('image/')) {
+					this.currentFileURL = input;
+					(evt.target as HTMLInputElement).value = '';
+				}
+			}).catch(() => {});
 		}
 	}
 </script>
