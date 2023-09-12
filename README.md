@@ -17,7 +17,7 @@ export const VUE_PORT = "VueJS Port";
 
 3. Replace data with your own.
 4. [Create localhost SSL certificate](https://www.section.io/engineering-education/how-to-get-ssl-https-for-localhost/)
-5. Go [here](chrome://flags/#allow-insecure-localhost) and enable localhost SSL
+5. Go to chrome://flags/#allow-insecure-localhost and enable localhost SSL
 6. Run `npm install`.
 7. Run `npm run serve` on one terminal
 
