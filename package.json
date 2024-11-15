@@ -29,7 +29,7 @@
     "eslint": "^9.12.0",
     "eslint-plugin-vue": "^8.0.3",
     "express": "^4.21.1",
-    "postcss": "^8.4.48",
+    "postcss": "^8.4.49",
     "sass": "^1.32.7",
     "sass-loader": "^16.0.2",
     "socket.io": "^4.8.1",
